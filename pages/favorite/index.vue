@@ -42,6 +42,8 @@ const handleSubmit = (event: Event) => {
 
 onMounted(() => {
     getFavorite()
+    const queryPokemonName = route.query.pokemon_name as string | null
+    pokemonName.value = queryPokemonName
 })
 
 watch(() => route.query, () => {

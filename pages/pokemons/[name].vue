@@ -3,7 +3,7 @@ import axios from 'axios';
 import Swal from 'sweetalert2';
 import { onMounted } from "vue";
 import Navbar from '~/components/Navbar.vue';
-import type { Abilities, Sprites } from '~/utils/types';
+import type { Abilities, PokemonType, Sprites } from '~/utils/types';
 import backend from '../../backend.json';
 
 const route = useRoute()
@@ -13,6 +13,7 @@ const pokemonName = ref<string>("")
 const abilities = ref<Abilities[]>([])
 const species = ref<{ name: string; url: string }>()
 const height = ref<number>()
+const weight = ref<number>()
 const sprites = ref<Sprites>({
     back_default: "",
     back_female: null,
@@ -23,6 +24,7 @@ const sprites = ref<Sprites>({
     front_shiny: "",
     front_shiny_female: null
 })
+const pokemonTypes = ref<PokemonType[]>([]);
 const isLoading = ref<boolean>(true)
 const favoriteClicked = ref<boolean>(false)
 
@@ -47,6 +49,8 @@ const getPokemon = async () => {
             front_shiny_female: res.data.sprites.front_shiny_female,
         }
         pokemonName.value = res.data.name
+        pokemonTypes.value = res.data.types
+        weight.value = res.data.weight
         isLoading.value = false
     } catch (error: any) {
         console.error(error)
@@ -148,16 +152,27 @@ onMounted(async () => {
     <div class="max-w-screen-md mx-auto p-5 lg:px-0">
         <h1 class="text-2xl font-bold">Detail of Pokemon (<span class="capitalize">{{ route.params.name }}</span>)</h1>
         <div v-if="!isLoading">
-            <div>
-                <p>Abilities:</p>
-                <ul id="abilities" class="list-disc list-inside">
-                    <li v-for="(ability, index) in abilities" :key="index">{{
-                        ability.ability.name
-                        }}</li>
-                </ul>
+            <div class="grid grid-cols-2 mb-2">
+                <div>
+                    <p>Abilities:</p>
+                    <ul id="abilities" class="list-disc list-inside ml-2">
+                        <li class="capitalize" v-for="(ability, index) in abilities" :key="index">
+                            {{ ability.ability.name }}
+                        </li>
+                    </ul>
+                </div>
+                <div>
+                    <p>Types:</p>
+                    <ul id="abilities" class="list-disc list-inside ml-2">
+                        <li class="capitalize" v-for="(pokemonType, index) in pokemonTypes" :key="index">
+                            {{ pokemonType.type.name }}
+                        </li>
+                    </ul>
+                </div>
             </div>
             <p>Species: {{ species?.name ?? '-' }}</p>
-            <p>Heihgt: {{ height ?? '-' }}</p>
+            <p>Height: {{ height ?? '-' }}</p>
+            <p>Weight: {{ weight ?? '-' }}</p>
             <div>
                 <p>Sprites:</p>
                 <div class="grid grid-cols-4 md:grid-cols-6">
