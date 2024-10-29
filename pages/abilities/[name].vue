@@ -10,6 +10,7 @@ const route = useRoute()
 const pokemons = ref<PokemonFromAbility[]>([])
 const isLoading = ref<boolean>(true)
 
+// get pokemons data based on selected ability
 const getPokemons = async () => {
     try {
         const res = await axios.get(`${backend.baseUrl}/abilities/${route.params.name}`)

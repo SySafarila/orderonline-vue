@@ -12,6 +12,7 @@ const pokemonName = ref<string | null>(null);
 const router = useRouter();
 const route = useRoute();
 
+// get favorited pokemonts
 const getFavorite = async () => {
     try {
         const res = await axios.get(`${backend.baseUrl}/favorite`, {
@@ -33,11 +34,13 @@ const getFavorite = async () => {
     }
 };
 
+// search favorite pokemon
 const handleSubmit = (event: Event) => {
     event.preventDefault();
     router.push(`?pokemon_name=${pokemonName.value}`);
 };
 
+// generate date to human readable
 const generateDate = (date: string) => {
     const dateRaw = new Date(date);
     const day = dateRaw.getDate();

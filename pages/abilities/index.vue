@@ -12,6 +12,7 @@ const next = ref<string | null>()
 const prev = ref<string | null>()
 const isLoading = ref<boolean>(true)
 
+// get abilities data
 const getAbilities = async () => {
     try {
         const res = await axios.get(`${backend.baseUrl}/abilities`, {

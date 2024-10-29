@@ -29,6 +29,7 @@ const pokemonTypes = ref<PokemonType[]>([]);
 const isLoading = ref<boolean>(true)
 const favoriteClicked = ref<boolean>(false)
 
+// get pokemon detail
 const getPokemon = async () => {
     try {
         const res = await axios.get(`${backend.baseUrl}/pokemons/${route.params.name}`)
@@ -69,6 +70,7 @@ const getPokemon = async () => {
     }
 }
 
+// add pokemon to favorite
 const addFavorite = async () => {
     if (favoriteClicked.value === true) {
         return;
@@ -102,6 +104,7 @@ const addFavorite = async () => {
     }
 }
 
+// remove pokemon from favorite
 const removeFavorite = async () => {
     if (favoriteClicked.value === true) {
         return;
@@ -126,6 +129,7 @@ const removeFavorite = async () => {
     }
 }
 
+// check if pokemon already in favorite
 const checkFavorite = async () => {
     try {
         const res = await axios.get(`${backend.baseUrl}/favorite/check/${pokemonName.value}`)
