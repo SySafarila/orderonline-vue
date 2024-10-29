@@ -52,7 +52,7 @@ watch(() => route.query, () => {
 
 <template>
     <Navbar />
-    <div class="p-5">
+    <div class="max-w-screen-md mx-auto p-5 lg:px-0">
         <h1 class="text-2xl font-bold">List of Favorite Pokemons</h1>
         <form @submit="handleSubmit" class="flex flex-col gap-2">
             <div class="flex flex-col gap-1">

@@ -2,6 +2,7 @@
 import axios from 'axios';
 import Swal from 'sweetalert2';
 import { onMounted } from "vue";
+import Navbar from '~/components/Navbar.vue';
 import type { Abilities, Sprites } from '~/utils/types';
 import backend from '../../backend.json';
 
@@ -23,6 +24,7 @@ const sprites = ref<Sprites>({
     front_shiny_female: null
 })
 const isLoading = ref<boolean>(true)
+const favoriteClicked = ref<boolean>(false)
 
 const getPokemon = async () => {
     try {
@@ -63,6 +65,10 @@ const getPokemon = async () => {
 }
 
 const addFavorite = async () => {
+    if (favoriteClicked.value === true) {
+        return;
+    }
+    favoriteClicked.value = true;
     try {
         const uploadedAbilities: { name: string; is_hidden: boolean }[] = [];
 
@@ -80,8 +86,10 @@ const addFavorite = async () => {
             title: "Added to favorite"
         })
         isFavorite.value = true
+        favoriteClicked.value = false
     } catch (error: any) {
         console.error(error)
+        favoriteClicked.value = false
         Swal.fire({
             icon: "error",
             title: `${error.response.data}`
@@ -90,6 +98,10 @@ const addFavorite = async () => {
 }
 
 const removeFavorite = async () => {
+    if (favoriteClicked.value === true) {
+        return;
+    }
+    favoriteClicked.value = true;
     try {
         await axios.delete(`${backend.baseUrl}/favorite/${pokemonName.value}`)
 
@@ -98,8 +110,10 @@ const removeFavorite = async () => {
             title: "Removed from favorite"
         })
         isFavorite.value = false
+        favoriteClicked.value = false
     } catch (error: any) {
         console.error(error)
+        favoriteClicked.value = false
         Swal.fire({
             icon: "error",
             title: `${error.response.data}`
@@ -130,7 +144,8 @@ onMounted(async () => {
 </script>
 
 <template>
-    <div class="p-5">
+    <Navbar />
+    <div class="max-w-screen-md mx-auto p-5 lg:px-0">
         <h1 class="text-2xl font-bold">Detail of Pokemon (<span class="capitalize">{{ route.params.name }}</span>)</h1>
         <div v-if="!isLoading">
             <div>
@@ -138,35 +153,40 @@ onMounted(async () => {
                 <ul id="abilities" class="list-disc list-inside">
                     <li v-for="(ability, index) in abilities" :key="index">{{
                         ability.ability.name
-                    }}</li>
+                        }}</li>
                 </ul>
             </div>
             <p>Species: {{ species?.name ?? '-' }}</p>
             <p>Heihgt: {{ height ?? '-' }}</p>
             <div>
                 <p>Sprites:</p>
-                <div class="flex">
-                    <img :src="sprites.back_default" alt="back_default" title="back default"
+                <div class="grid grid-cols-4 md:grid-cols-6">
+                    <img class="w-full" :src="sprites.back_default" alt="back_default" title="back default"
                         v-if="sprites.back_default">
-                    <img :src="sprites.back_female" alt="back_female" title="back female" v-if="sprites.back_female">
-                    <img :src="sprites.back_shiny" alt="back_shiny" title="back shiny" v-if="sprites.back_shiny">
-                    <img :src="sprites.back_shiny_female" alt="back_shiny_female" title="back shiny female"
-                        v-if="sprites.back_shiny_female">
-                    <img :src="sprites.front_default" alt="front_default" title="front default"
+                    <img class="w-full" :src="sprites.back_female" alt="back_female" title="back female"
+                        v-if="sprites.back_female">
+                    <img class="w-full" :src="sprites.back_shiny" alt="back_shiny" title="back shiny"
+                        v-if="sprites.back_shiny">
+                    <img class="w-full" :src="sprites.back_shiny_female" alt="back_shiny_female"
+                        title="back shiny female" v-if="sprites.back_shiny_female">
+                    <img class="w-full" :src="sprites.front_default" alt="front_default" title="front default"
                         v-if="sprites.front_default">
-                    <img :src="sprites.front_female" alt="front_female" title="front female"
+                    <img class="w-full" :src="sprites.front_female" alt="front_female" title="front female"
                         v-if="sprites.front_female">
-                    <img :src="sprites.front_shiny" alt="front_shiny" title="front shiny" v-if="sprites.front_shiny">
-                    <img :src="sprites.front_shiny_female" alt="front_shiny female" title="front shiny female"
-                        v-if="sprites.front_shiny_female">
+                    <img class="w-full" :src="sprites.front_shiny" alt="front_shiny" title="front shiny"
+                        v-if="sprites.front_shiny">
+                    <img class="w-full" :src="sprites.front_shiny_female" alt="front_shiny female"
+                        title="front shiny female" v-if="sprites.front_shiny_female">
                 </div>
             </div>
             <button class="bg-gray-100 border px-3 py-1 rounded hover:bg-gray-200" @click="addFavorite"
-                v-if="!isFavorite && favoriteCheck == true">Add to
-                Favorite</button>
+                v-if="!isFavorite && favoriteCheck == true" :disabled="favoriteClicked === true">
+                {{ favoriteClicked ? 'Loading...' : 'Add to Favorite' }}
+            </button>
             <button class="bg-gray-100 border px-3 py-1 rounded hover:bg-gray-200" @click="removeFavorite"
-                v-if="isFavorite && favoriteCheck == true">Remove
-                Favorite</button>
+                v-if="isFavorite && favoriteCheck == true" :disabled="favoriteClicked === true">
+                {{ favoriteClicked ? 'Loading...' : 'Remove Favorite' }}
+            </button>
         </div>
         <p v-else>Loading...</p>
     </div>

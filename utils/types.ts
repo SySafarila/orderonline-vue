@@ -14,6 +14,11 @@ export type Pokemon = {
   url: string;
 };
 
+export type Ability = {
+  name: string;
+  url: string;
+};
+
 export type Sprites = {
   back_default: null | string;
   back_female: null | string;
