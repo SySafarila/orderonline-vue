@@ -12,6 +12,10 @@ const next = ref<string | null>()
 const prev = ref<string | null>()
 const isLoading = ref<boolean>(true)
 
+useHead({
+    title: "List of Abilities"
+})
+
 // get abilities data
 const getAbilities = async () => {
     try {

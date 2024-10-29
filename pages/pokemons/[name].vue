@@ -20,6 +20,10 @@ const pokemonTypes = ref<PokemonType[]>([]);
 const isLoading = ref<boolean>(true)
 const favoriteClicked = ref<boolean>(false)
 
+useHead({
+    title: 'Pokemon Detail'
+})
+
 // get pokemon detail
 const getPokemon = async () => {
     try {
@@ -146,6 +150,10 @@ onMounted(async () => {
             <button class="bg-gray-100 border px-3 py-1 rounded hover:bg-gray-200" @click="removeFavorite"
                 v-if="isFavorite && favoriteCheck == true" :disabled="favoriteClicked === true">
                 {{ favoriteClicked ? 'Loading...' : 'Remove Favorite' }}
+            </button>
+            <button class="bg-gray-100 border px-3 py-1 rounded hover:bg-gray-200" v-if="favoriteCheck == false"
+                :disabled="true">
+                Loading...
             </button>
         </div>
         <div v-if="!isLoading">

@@ -12,6 +12,10 @@ const pokemonName = ref<string | null>(null);
 const router = useRouter();
 const route = useRoute();
 
+useHead({
+    title: "Favorite Pokemon"
+})
+
 // get favorited pokemonts
 const getFavorite = async () => {
     try {

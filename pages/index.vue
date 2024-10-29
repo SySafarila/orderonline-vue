@@ -12,6 +12,10 @@ const next = ref<string | null>()
 const prev = ref<string | null>()
 const isLoading = ref<boolean>(true)
 
+useHead({
+  title: "List of Pokemons"
+})
+
 // get pokemons data from backend
 const getPokemons = async () => {
   try {

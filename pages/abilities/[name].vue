@@ -10,6 +10,10 @@ const route = useRoute()
 const pokemons = ref<PokemonFromAbility[]>([])
 const isLoading = ref<boolean>(true)
 
+useHead({
+    title: "List pokemons based on selected ability"
+})
+
 // get pokemons data based on selected ability
 const getPokemons = async () => {
     try {
