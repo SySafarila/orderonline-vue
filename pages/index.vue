@@ -2,6 +2,7 @@
 import axios from 'axios';
 import Swal from 'sweetalert2';
 import { onMounted, watch } from "vue";
+import Navbar from '~/components/Navbar.vue';
 import type { Pokemon } from '~/utils/types';
 import backend from '../backend.json';
 
@@ -56,16 +57,18 @@ watch(() => route.query, () => {
 </script>
 
 <template>
-  <div class="p-5">
+  <Navbar />
+  <div class="max-w-screen-md mx-auto p-5 lg:px-0">
     <h1 class="text-2xl font-bold">List of Pokemons</h1>
     <div v-if="!isLoading">
       <ul class="mt-2">
         <li v-for="(pokemon, index) in pokemons" :key="index">
-          <NuxtLink :to="`/pokemons/${pokemon.name}`" class="hover:underline hover:text-blue-500 capitalize">{{ pokemon.name }}
+          <NuxtLink :to="`/pokemons/${pokemon.name}`" class="hover:underline hover:text-blue-500 capitalize">{{
+            pokemon.name }}
           </NuxtLink>
         </li>
       </ul>
-      <div class="flex items-center gap-2 mt-4">
+      <div class="flex items-center gap-2 mt-4 justify-center">
         <NuxtLink :to="prev" v-if="prev !== null" class="bg-gray-100 hover:bg-gray-200 px-3 py-1 rounded border">
           Previous</NuxtLink>
         <NuxtLink :to="next" v-if="next !== null" class="bg-gray-100 hover:bg-gray-200 px-3 py-1 rounded border">Next

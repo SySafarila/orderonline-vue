@@ -2,8 +2,9 @@
 import axios from "axios";
 import Swal from "sweetalert2";
 import { onMounted, watch } from "vue";
-import backend from '../../backend.json';
+import Navbar from "~/components/Navbar.vue";
 import type { PokemonFavorite } from "~/utils/types";
+import backend from '../../backend.json';
 
 const pokemons = ref<PokemonFavorite[]>([])
 const isLoading = ref<boolean>(true)
@@ -50,6 +51,7 @@ watch(() => route.query, () => {
 </script>
 
 <template>
+    <Navbar />
     <div class="p-5">
         <h1 class="text-2xl font-bold">List of Favorite Pokemons</h1>
         <form @submit="handleSubmit" class="flex flex-col gap-2">
