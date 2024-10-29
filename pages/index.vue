@@ -1,10 +1,12 @@
 <script setup lang="ts">
 import axios from 'axios';
+import Swal from 'sweetalert2';
 import { onMounted, watch } from "vue";
+import type { Pokemon } from '~/utils/types';
 import backend from '../backend.json';
 
 const route = useRoute()
-const pokemons = ref<{ name: string; url: string }[]>([])
+const pokemons = ref<Pokemon[]>([])
 const next = ref<string | null>()
 const prev = ref<string | null>()
 const isLoading = ref<boolean>(true)
@@ -18,7 +20,7 @@ const getPokemons = async () => {
       }
     })
 
-    pokemons.value = res.data.results
+    pokemons.value = res.data.results as Pokemon[]
     if (res.data.next) {
       next.value = new URL(res.data.next).search
     } else {
@@ -31,8 +33,15 @@ const getPokemons = async () => {
     }
     isLoading.value = false
 
-  } catch (error) {
+  } catch (error: any) {
     console.error(error)
+    Swal.fire({
+      icon: "error",
+      title: error.message,
+      allowOutsideClick: false,
+      allowEscapeKey: false,
+      showConfirmButton: false
+    })
   }
 }
 

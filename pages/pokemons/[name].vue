@@ -2,20 +2,8 @@
 import axios from 'axios';
 import Swal from 'sweetalert2';
 import { onMounted } from "vue";
+import type { Abilities, Sprites } from '~/utils/types';
 import backend from '../../backend.json';
-
-type Sprites = {
-    back_default: null | string;
-    back_female: null | string;
-    back_shiny: null | string;
-    back_shiny_female: null | string;
-    front_default: null | string;
-    front_female: null | string;
-    front_shiny: null | string;
-    front_shiny_female: null | string;
-}
-
-type Abilities = { is_hidden: boolean; slot: number; ability: { name: string; url: string } }
 
 const route = useRoute()
 const isFavorite = ref<boolean>(false)
@@ -143,7 +131,7 @@ onMounted(async () => {
                 <ul id="abilities" class="list-disc list-inside">
                     <li v-for="(ability, index) in abilities" :key="index">{{
                         ability.ability.name
-                        }}</li>
+                    }}</li>
                 </ul>
             </div>
             <p>Species: {{ species?.name ?? '-' }}</p>
