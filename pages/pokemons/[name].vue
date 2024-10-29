@@ -18,6 +18,9 @@ type Sprites = {
 type Abilities = { is_hidden: boolean; slot: number; ability: { name: string; url: string } }
 
 const route = useRoute()
+const isFavorite = ref<boolean>(false)
+const favoriteCheck = ref<boolean>(false)
+const pokemonName = ref<string>("")
 const abilities = ref<Abilities[]>([])
 const species = ref<{ name: string; url: string }>()
 const height = ref<number>()
@@ -37,7 +40,6 @@ const getPokemon = async () => {
     try {
         const res = await axios.get(`${backend.baseUrl}/pokemons/${route.params.name}`)
         console.log(res.data);
-        isLoading.value = false
         abilities.value = res.data.abilities
         species.value = {
             name: res.data.species.name,
@@ -54,6 +56,8 @@ const getPokemon = async () => {
             front_shiny: res.data.sprites.front_shiny,
             front_shiny_female: res.data.sprites.front_shiny_female,
         }
+        pokemonName.value = res.data.name
+        isLoading.value = false
     } catch (error: any) {
         console.error(error)
         Swal.fire({
@@ -70,8 +74,63 @@ const getPokemon = async () => {
     }
 }
 
-onMounted(() => {
-    getPokemon()
+const addFavorite = async () => {
+    try {
+        await axios.post(`${backend.baseUrl}/pokemons`, {
+            pokemon_name: pokemonName.value
+        })
+
+        Swal.fire({
+            icon: "success",
+            title: "Added to favorite"
+        })
+        isFavorite.value = true
+    } catch (error: any) {
+        console.error(error)
+        Swal.fire({
+            icon: "error",
+            title: `${error.response.data}`
+        })
+    }
+}
+
+const removeFavorite = async () => {
+    try {
+        await axios.delete(`${backend.baseUrl}/pokemons/${pokemonName.value}`)
+
+        Swal.fire({
+            icon: "success",
+            title: "Removed from favorite"
+        })
+        isFavorite.value = false
+    } catch (error: any) {
+        console.error(error)
+        Swal.fire({
+            icon: "error",
+            title: `${error.response.data}`
+        })
+    }
+}
+
+const checkFavorite = async () => {
+    try {
+        const res = await axios.get(`${backend.baseUrl}/favorite/check/${pokemonName.value}`)
+        if (res.data.status === true) {
+            isFavorite.value = true
+        }
+        favoriteCheck.value = true
+    } catch (error: any) {
+        console.error(error)
+        Swal.fire({
+            icon: "error",
+            title: `${error.response.data}`
+        })
+    }
+}
+
+onMounted(async () => {
+    await getPokemon()
+    checkFavorite()
 })
 </script>
 
@@ -107,6 +166,12 @@ onMounted(() => {
                         v-if="sprites.front_shiny_female">
                 </div>
             </div>
+            <button class="bg-gray-100 border px-3 py-1 rounded hover:bg-gray-200" @click="addFavorite"
+                v-if="!isFavorite && favoriteCheck == true">Add to
+                Favorite</button>
+            <button class="bg-gray-100 border px-3 py-1 rounded hover:bg-gray-200" @click="removeFavorite"
+                v-if="isFavorite && favoriteCheck == true">Remove
+                Favorite</button>
         </div>
         <p v-else>Loading...</p>
     </div>

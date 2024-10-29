@@ -17,7 +17,7 @@ const getPokemons = async () => {
         offset: route.query.offset,
       }
     })
-    console.log(res.data);
+
     pokemons.value = res.data.results
     if (res.data.next) {
       next.value = new URL(res.data.next).search
