@@ -2,6 +2,7 @@
 import { onMounted } from "vue";
 import axios from 'axios'
 import backend from '../../backend.json'
+import Swal from 'sweetalert2'
 
 type Sprites = {
     back_default: null | string;
@@ -53,8 +54,19 @@ const getPokemon = async () => {
             front_shiny: res.data.sprites.front_shiny,
             front_shiny_female: res.data.sprites.front_shiny_female,
         }
-    } catch (error) {
+    } catch (error: any) {
         console.error(error)
+        Swal.fire({
+            icon: "error",
+            title: `Pokemon ${error.response.data}`
+        }).then(res => {
+            if (res.isConfirmed) {
+                window.location.href = "/"
+            }
+            if (res.isDismissed) {
+                window.location.href = "/"
+            }
+        })
     }
 }
 
@@ -72,7 +84,7 @@ onMounted(() => {
                 <ul id="abilities" class="list-disc list-inside">
                     <li v-for="(ability, index) in abilities" :key="index">{{
                         ability.ability.name
-                    }}</li>
+                        }}</li>
                 </ul>
             </div>
             <p>Species: {{ species?.name ?? '-' }}</p>
