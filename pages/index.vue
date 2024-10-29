@@ -1,7 +1,7 @@
 <script setup lang="ts">
+import axios from 'axios';
 import { onMounted, watch } from "vue";
-import axios from 'axios'
-import backend from '../backend.json'
+import backend from '../backend.json';
 
 const route = useRoute()
 const pokemons = ref<{ name: string; url: string }[]>([])
@@ -41,6 +41,7 @@ onMounted(() => {
 })
 
 watch(() => route.query, () => {
+  isLoading.value = true
   getPokemons()
 })
 </script>

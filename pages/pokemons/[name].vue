@@ -1,8 +1,8 @@
 <script setup lang="ts">
+import axios from 'axios';
+import Swal from 'sweetalert2';
 import { onMounted } from "vue";
-import axios from 'axios'
-import backend from '../../backend.json'
-import Swal from 'sweetalert2'
+import backend from '../../backend.json';
 
 type Sprites = {
     back_default: null | string;
