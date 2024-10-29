@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { onMounted } from "vue";
+import { onMounted, watch } from "vue";
 import axios from 'axios'
 import backend from '../backend.json'
 
@@ -21,9 +21,13 @@ const getPokemons = async () => {
     pokemons.value = res.data.results
     if (res.data.next) {
       next.value = new URL(res.data.next).search
+    } else {
+      next.value = null
     }
     if (res.data.previous) {
       prev.value = new URL(res.data.previous).search
+    } else {
+      prev.value = null
     }
     isLoading.value = false
 
@@ -33,6 +37,10 @@ const getPokemons = async () => {
 }
 
 onMounted(() => {
+  getPokemons()
+})
+
+watch(() => route.query, () => {
   getPokemons()
 })
 </script>
@@ -48,8 +56,10 @@ onMounted(() => {
         </li>
       </ul>
       <div class="flex items-center gap-2 mt-4">
-        <a :href="prev" v-if="prev !== null" class="bg-gray-100 hover:bg-gray-200 px-3 py-1 rounded border">Previous</a>
-        <a :href="next" v-if="next !== null" class="bg-gray-100 hover:bg-gray-200 px-3 py-1 rounded border">Next</a>
+        <NuxtLink :to="prev" v-if="prev !== null" class="bg-gray-100 hover:bg-gray-200 px-3 py-1 rounded border">
+          Previous</NuxtLink>
+        <NuxtLink :to="next" v-if="next !== null" class="bg-gray-100 hover:bg-gray-200 px-3 py-1 rounded border">Next
+        </NuxtLink>
       </div>
     </div>
     <p v-else class="mt-2">Loading...</p>
