@@ -61,7 +61,7 @@ watch(() => route.query, () => {
     <div v-if="!isLoading">
       <ul class="mt-2">
         <li v-for="(pokemon, index) in pokemons" :key="index">
-          <NuxtLink :to="`/pokemons/${pokemon.name}`" class="hover:underline hover:text-blue-500">{{ pokemon.name }}
+          <NuxtLink :to="`/pokemons/${pokemon.name}`" class="hover:underline hover:text-blue-500 capitalize">{{ pokemon.name }}
           </NuxtLink>
         </li>
       </ul>

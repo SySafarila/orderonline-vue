@@ -3,6 +3,10 @@ export type PokemonFavorite = {
   id: number;
   created_at: string;
   updated_at: string;
+  abilities: {
+    name: string;
+    is_hidden: boolean;
+  }[];
 };
 
 export type Pokemon = {

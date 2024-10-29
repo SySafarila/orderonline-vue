@@ -63,11 +63,20 @@ watch(() => route.query, () => {
             </div>
         </form>
         <div v-if="!isLoading">
-            <ul class="mt-2">
+            <ul class="mt-2 list-disc list-inside">
                 <li v-for="(pokemon, index) in pokemons" :key="index">
-                    <NuxtLink :to="`/pokemons/${pokemon.pokemon_name}`" class="hover:underline hover:text-blue-500">{{
-                        pokemon.pokemon_name }}
+                    <NuxtLink :to="`/pokemons/${pokemon.pokemon_name}`"
+                        class="hover:underline hover:text-blue-500 capitalize">
+                        {{ pokemon.pokemon_name }}
                     </NuxtLink>
+                    <div class="ml-10">
+                        <p>Abilities:</p>
+                        <ul class="ml-4">
+                            <li v-for="(ability, indexAbility) in pokemon.abilities" :key="indexAbility">
+                                {{ ability.name }}
+                            </li>
+                        </ul>
+                    </div>
                 </li>
             </ul>
         </div>

@@ -64,8 +64,15 @@ const getPokemon = async () => {
 
 const addFavorite = async () => {
     try {
-        await axios.post(`${backend.baseUrl}/pokemons`, {
-            pokemon_name: pokemonName.value
+        const uploadedAbilities: { name: string; is_hidden: boolean }[] = [];
+
+        abilities.value.forEach(ability => {
+            uploadedAbilities.push({ name: ability.ability.name, is_hidden: ability.is_hidden });
+        });
+
+        await axios.post(`${backend.baseUrl}/favorite`, {
+            pokemon_name: pokemonName.value,
+            abilities: uploadedAbilities
         })
 
         Swal.fire({
@@ -84,7 +91,7 @@ const addFavorite = async () => {
 
 const removeFavorite = async () => {
     try {
-        await axios.delete(`${backend.baseUrl}/pokemons/${pokemonName.value}`)
+        await axios.delete(`${backend.baseUrl}/favorite/${pokemonName.value}`)
 
         Swal.fire({
             icon: "success",
