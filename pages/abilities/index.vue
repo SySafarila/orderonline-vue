@@ -22,18 +22,20 @@ const getAbilities = async () => {
         })
 
         abilities.value = res.data.results as Ability[]
+
         if (res.data.next) {
             next.value = new URL(res.data.next).search
         } else {
             next.value = null
         }
+
         if (res.data.previous) {
             prev.value = new URL(res.data.previous).search
         } else {
             prev.value = null
         }
-        isLoading.value = false
 
+        isLoading.value = false
     } catch (error: any) {
         console.error(error)
         Swal.fire({
@@ -61,8 +63,8 @@ watch(() => route.query, () => {
     <div class="max-w-screen-md mx-auto p-5 lg:px-0">
         <h1 class="text-2xl font-bold">List of Abilities</h1>
         <div v-if="!isLoading">
-            <ul class="mt-2">
-                <li v-for="(ability, index) in abilities" :key="index">
+            <ul class="mt-2 flex flex-col">
+                <li v-for="(ability, index) in abilities" :key="index" class="hover:bg-gray-100 px-2 py-1 rounded">
                     <NuxtLink :to="`/abilities/${ability.name}`" class="hover:underline hover:text-blue-500 capitalize">
                         {{ ability.name }}
                     </NuxtLink>
@@ -71,9 +73,11 @@ watch(() => route.query, () => {
             <div class="flex items-center gap-2 mt-4 justify-center">
                 <NuxtLink :to="prev" v-if="prev !== null"
                     class="bg-gray-100 hover:bg-gray-200 px-3 py-1 rounded border">
-                    Previous</NuxtLink>
+                    Previous
+                </NuxtLink>
                 <NuxtLink :to="next" v-if="next !== null"
-                    class="bg-gray-100 hover:bg-gray-200 px-3 py-1 rounded border">Next
+                    class="bg-gray-100 hover:bg-gray-200 px-3 py-1 rounded border">
+                    Next
                 </NuxtLink>
             </div>
         </div>

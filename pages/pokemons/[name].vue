@@ -7,6 +7,7 @@ import type { Abilities, PokemonType, Sprites } from '~/utils/types';
 import backend from '../../backend.json';
 
 const route = useRoute()
+const router = useRouter()
 const isFavorite = ref<boolean>(false)
 const favoriteCheck = ref<boolean>(false)
 const pokemonName = ref<string>("")
@@ -31,7 +32,6 @@ const favoriteClicked = ref<boolean>(false)
 const getPokemon = async () => {
     try {
         const res = await axios.get(`${backend.baseUrl}/pokemons/${route.params.name}`)
-        console.log(res.data);
         abilities.value = res.data.abilities
         species.value = {
             name: res.data.species.name,
@@ -51,6 +51,7 @@ const getPokemon = async () => {
         pokemonName.value = res.data.name
         pokemonTypes.value = res.data.types
         weight.value = res.data.weight
+        checkFavorite()
         isLoading.value = false
     } catch (error: any) {
         console.error(error)
@@ -59,10 +60,10 @@ const getPokemon = async () => {
             title: `Pokemon ${error.response.data}`
         }).then(res => {
             if (res.isConfirmed) {
-                window.location.href = "/"
+                router.push('/');
             }
             if (res.isDismissed) {
-                window.location.href = "/"
+                router.push('/');
             }
         })
     }
@@ -143,7 +144,6 @@ const checkFavorite = async () => {
 
 onMounted(async () => {
     await getPokemon()
-    checkFavorite()
 })
 </script>
 

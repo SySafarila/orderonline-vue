@@ -46,3 +46,9 @@ export type PokemonType = {
     url: string;
   };
 };
+
+export type PokemonFromAbility = {
+  is_hidden: boolean;
+  pokemon: Pokemon;
+  slot: number;
+};
