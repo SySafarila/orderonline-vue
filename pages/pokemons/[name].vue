@@ -15,16 +15,7 @@ const abilities = ref<Abilities[]>([])
 const species = ref<{ name: string; url: string }>()
 const height = ref<number>()
 const weight = ref<number>()
-const sprites = ref<Sprites>({
-    back_default: "",
-    back_female: null,
-    back_shiny: "",
-    back_shiny_female: "",
-    front_default: "",
-    front_female: null,
-    front_shiny: "",
-    front_shiny_female: null
-})
+const sprites = ref<Sprites>()
 const pokemonTypes = ref<PokemonType[]>([]);
 const isLoading = ref<boolean>(true)
 const favoriteClicked = ref<boolean>(false)
@@ -39,16 +30,7 @@ const getPokemon = async () => {
             url: res.data.species.url,
         }
         height.value = res.data.height
-        sprites.value = {
-            back_default: res.data.sprites.back_default,
-            back_female: res.data.sprites.back_female,
-            back_shiny: res.data.sprites.back_shiny,
-            back_shiny_female: res.data.sprites.back_shiny_female,
-            front_default: res.data.sprites.front_default,
-            front_female: res.data.sprites.front_female,
-            front_shiny: res.data.sprites.front_shiny,
-            front_shiny_female: res.data.sprites.front_shiny_female,
-        }
+        sprites.value = res.data.sprites as Sprites
         pokemonName.value = res.data.name
         pokemonTypes.value = res.data.types
         weight.value = res.data.weight
@@ -154,14 +136,28 @@ onMounted(async () => {
 <template>
     <Navbar />
     <div class="max-w-screen-md mx-auto p-5 lg:px-0">
-        <h1 class="text-2xl font-bold">Detail of Pokemon (<span class="capitalize">{{ route.params.name }}</span>)</h1>
+        <div class="flex justify-between flex-col gap-2 mb-3 md:flex-row">
+            <h1 class="text-2xl font-bold">Detail of Pokemon (<span class="capitalize">{{ route.params.name }}</span>)
+            </h1>
+            <button class="bg-gray-100 border px-3 py-1 rounded hover:bg-gray-200" @click="addFavorite"
+                v-if="!isFavorite && favoriteCheck == true" :disabled="favoriteClicked === true">
+                {{ favoriteClicked ? 'Loading...' : 'Add to Favorite' }}
+            </button>
+            <button class="bg-gray-100 border px-3 py-1 rounded hover:bg-gray-200" @click="removeFavorite"
+                v-if="isFavorite && favoriteCheck == true" :disabled="favoriteClicked === true">
+                {{ favoriteClicked ? 'Loading...' : 'Remove Favorite' }}
+            </button>
+        </div>
         <div v-if="!isLoading">
             <div class="grid grid-cols-2 mb-2">
                 <div>
                     <p>Abilities:</p>
                     <ul id="abilities" class="list-disc list-inside ml-2">
                         <li class="capitalize" v-for="(ability, index) in abilities" :key="index">
-                            {{ ability.ability.name }}
+                            <NuxtLink :to="`/abilities/${ability.ability.name}`"
+                                class="hover:underline hover:text-blue-500">
+                                {{ ability.ability.name }}
+                            </NuxtLink>
                         </li>
                     </ul>
                 </div>
@@ -174,38 +170,65 @@ onMounted(async () => {
                     </ul>
                 </div>
             </div>
-            <p>Species: {{ species?.name ?? '-' }}</p>
+            <p class="capitalize">Species: {{ species?.name ?? '-' }}</p>
             <p>Height: {{ height ?? '-' }}</p>
             <p>Weight: {{ weight ?? '-' }}</p>
-            <div>
-                <p>Sprites:</p>
-                <div class="grid grid-cols-4 md:grid-cols-6">
-                    <img class="w-full" :src="sprites.back_default" alt="back_default" title="back default"
-                        v-if="sprites.back_default">
-                    <img class="w-full" :src="sprites.back_female" alt="back_female" title="back female"
-                        v-if="sprites.back_female">
-                    <img class="w-full" :src="sprites.back_shiny" alt="back_shiny" title="back shiny"
-                        v-if="sprites.back_shiny">
-                    <img class="w-full" :src="sprites.back_shiny_female" alt="back_shiny_female"
-                        title="back shiny female" v-if="sprites.back_shiny_female">
-                    <img class="w-full" :src="sprites.front_default" alt="front_default" title="front default"
-                        v-if="sprites.front_default">
-                    <img class="w-full" :src="sprites.front_female" alt="front_female" title="front female"
-                        v-if="sprites.front_female">
-                    <img class="w-full" :src="sprites.front_shiny" alt="front_shiny" title="front shiny"
-                        v-if="sprites.front_shiny">
-                    <img class="w-full" :src="sprites.front_shiny_female" alt="front_shiny female"
-                        title="front shiny female" v-if="sprites.front_shiny_female">
+            <div class="flex flex-col gap-2 mt-3">
+                <div class="bg-gray-100 p-3 rounded border">
+                    <p>Sprites</p>
+                    <div class="grid grid-cols-4 md:grid-cols-6">
+                        <img class="w-full aspect-square" :src="sprites?.back_default" alt="back_default"
+                            title="back default" v-if="sprites?.back_default">
+                        <img class="w-full aspect-square" :src="sprites?.back_female" alt="back_female"
+                            title="back female" v-if="sprites?.back_female">
+                        <img class="w-full aspect-square" :src="sprites?.back_shiny" alt="back_shiny" title="back shiny"
+                            v-if="sprites?.back_shiny">
+                        <img class="w-full aspect-square" :src="sprites?.back_shiny_female" alt="back_shiny_female"
+                            title="back shiny female" v-if="sprites?.back_shiny_female">
+                        <img class="w-full aspect-square" :src="sprites?.front_default" alt="front_default"
+                            title="front default" v-if="sprites?.front_default">
+                        <img class="w-full aspect-square" :src="sprites?.front_female" alt="front_female"
+                            title="front female" v-if="sprites?.front_female">
+                        <img class="w-full aspect-square" :src="sprites?.front_shiny" alt="front_shiny"
+                            title="front shiny" v-if="sprites?.front_shiny">
+                        <img class="w-full aspect-square" :src="sprites?.front_shiny_female" alt="front_shiny female"
+                            title="front shiny female" v-if="sprites?.front_shiny_female">
+                    </div>
+                </div>
+                <div class="bg-gray-100 p-3 rounded border">
+                    <p>Dream World</p>
+                    <div class="grid grid-cols-4 md:grid-cols-6">
+                        <img class="w-full aspect-square" :src="sprites?.other?.dream_world?.front_default"
+                            alt="Dream world" title="Dream world" v-if="sprites?.other?.dream_world?.front_default">
+                        <img class="w-full aspect-square" :src="sprites?.other?.dream_world?.front_female"
+                            alt="Dream world" title="Dream world" v-if="sprites?.other?.dream_world?.front_female">
+                    </div>
+                </div>
+                <div class="bg-gray-100 p-3 rounded border">
+                    <p>Home</p>
+                    <div class="grid grid-cols-4 md:grid-cols-6">
+                        <img class="w-full aspect-square" :src="sprites?.other?.home?.front_default" alt="Home"
+                            title="Home" v-if="sprites?.other?.home?.front_default">
+                        <img class="w-full aspect-square" :src="sprites?.other?.home?.front_female" alt="Home"
+                            title="Home" v-if="sprites?.other?.home?.front_female">
+                        <img class="w-full aspect-square" :src="sprites?.other?.home?.front_shiny" alt="Home"
+                            title="Home" v-if="sprites?.other?.home?.front_shiny">
+                        <img class="w-full aspect-square" :src="sprites?.other?.home?.front_shiny_female" alt="Home"
+                            title="Home" v-if="sprites?.other?.home?.front_shiny_female">
+                    </div>
+                </div>
+                <div class="bg-gray-100 p-3 rounded border">
+                    <p>Official Artwork</p>
+                    <div class="grid grid-cols-4 md:grid-cols-6">
+                        <img class="w-full aspect-square" :src="sprites?.other?.['official-artwork']?.front_default"
+                            alt="Official Artwork" title="Official Artwork"
+                            v-if="sprites?.other?.['official-artwork']?.front_default">
+                        <img class="w-full aspect-square" :src="sprites?.other?.['official-artwork']?.front_shiny"
+                            alt="Official Artwork" title="Official Artwork"
+                            v-if="sprites?.other?.['official-artwork']?.front_shiny">
+                    </div>
                 </div>
             </div>
-            <button class="bg-gray-100 border px-3 py-1 rounded hover:bg-gray-200" @click="addFavorite"
-                v-if="!isFavorite && favoriteCheck == true" :disabled="favoriteClicked === true">
-                {{ favoriteClicked ? 'Loading...' : 'Add to Favorite' }}
-            </button>
-            <button class="bg-gray-100 border px-3 py-1 rounded hover:bg-gray-200" @click="removeFavorite"
-                v-if="isFavorite && favoriteCheck == true" :disabled="favoriteClicked === true">
-                {{ favoriteClicked ? 'Loading...' : 'Remove Favorite' }}
-            </button>
         </div>
         <p v-else>Loading...</p>
     </div>
