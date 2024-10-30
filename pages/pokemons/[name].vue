@@ -63,15 +63,8 @@ const addFavorite = async () => {
     }
     favoriteClicked.value = true;
     try {
-        const uploadedAbilities: { name: string; is_hidden: boolean }[] = [];
-
-        abilities.value.forEach(ability => {
-            uploadedAbilities.push({ name: ability.ability.name, is_hidden: ability.is_hidden });
-        });
-
         await axios.post(`${backend.baseUrl}/favorite`, {
-            pokemon_name: pokemonName.value,
-            abilities: uploadedAbilities
+            pokemon_name: pokemonName.value
         })
 
         Swal.fire({
