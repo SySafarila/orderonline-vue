@@ -2,7 +2,7 @@
 import axios from 'axios';
 import Swal from 'sweetalert2';
 import { onMounted, watch } from "vue";
-import Navbar from '~/components/Navbar.vue';
+import MainLayout from '~/components/MainLayout.vue';
 import type { PokemonFromAbility } from '~/utils/types';
 import backend from '../../backend.json';
 
@@ -44,8 +44,7 @@ watch(() => route.query, () => {
 </script>
 
 <template>
-    <Navbar />
-    <div class="max-w-screen-md mx-auto p-5 lg:px-0">
+    <MainLayout>
         <h1 class="text-2xl font-bold">
             <span>List of Pokemons that have ability: </span>
             <span class="capitalize">{{ route.params.name }}</span>
@@ -61,5 +60,5 @@ watch(() => route.query, () => {
             </ul>
         </div>
         <p v-else class="mt-2">Loading...</p>
-    </div>
+    </MainLayout>
 </template>

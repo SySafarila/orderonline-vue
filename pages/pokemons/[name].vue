@@ -2,7 +2,7 @@
 import axios from 'axios';
 import Swal from 'sweetalert2';
 import { onMounted } from "vue";
-import Navbar from '~/components/Navbar.vue';
+import MainLayout from '~/components/MainLayout.vue';
 import type { Abilities, PokemonType, Sprites } from '~/utils/types';
 import backend from '../../backend.json';
 
@@ -138,8 +138,7 @@ onMounted(async () => {
 </script>
 
 <template>
-    <Navbar />
-    <div class="max-w-screen-md mx-auto p-5 lg:px-0">
+    <MainLayout>
         <div class="flex justify-between flex-col gap-2 mb-3 md:flex-row">
             <h1 class="text-2xl font-bold">Detail of Pokemon (<span class="capitalize">{{ route.params.name }}</span>)
             </h1>
@@ -239,5 +238,5 @@ onMounted(async () => {
             </div>
         </div>
         <p v-else>Loading...</p>
-    </div>
+    </MainLayout>
 </template>

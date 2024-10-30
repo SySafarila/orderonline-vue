@@ -2,7 +2,7 @@
 import axios from "axios";
 import Swal from "sweetalert2";
 import { onMounted, watch } from "vue";
-import Navbar from "~/components/Navbar.vue";
+import MainLayout from "~/components/MainLayout.vue";
 import type { PokemonFavorite } from "~/utils/types";
 import backend from "../../backend.json";
 
@@ -72,8 +72,7 @@ watch(
 </script>
 
 <template>
-    <Navbar />
-    <div class="max-w-screen-md mx-auto p-5 lg:px-0">
+    <MainLayout>
         <h1 class="text-2xl font-bold">List of Favorite Pokemons</h1>
         <form @submit="handleSubmit" class="flex items-end w-full gap-2">
             <div class="flex flex-col w-full gap-1">
@@ -113,5 +112,5 @@ watch(
         <p v-if="!isLoading && pokemons.length === 0">
             You don't have any favorite Pokemons
         </p>
-    </div>
+    </MainLayout>
 </template>

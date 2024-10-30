@@ -2,7 +2,7 @@
 import axios from 'axios';
 import Swal from 'sweetalert2';
 import { onMounted, watch } from "vue";
-import Navbar from '~/components/Navbar.vue';
+import MainLayout from '~/components/MainLayout.vue';
 import type { Pokemon } from '~/utils/types';
 import backend from '../backend.json';
 
@@ -64,8 +64,7 @@ watch(() => route.query, () => {
 </script>
 
 <template>
-  <Navbar />
-  <div class="max-w-screen-md mx-auto p-5 lg:px-0">
+  <MainLayout>
     <h1 class="text-2xl font-bold">List of Pokemons</h1>
     <div v-if="!isLoading">
       <ul class="mt-2 flex flex-col">
@@ -85,5 +84,5 @@ watch(() => route.query, () => {
       </div>
     </div>
     <p v-else class="mt-2">Loading...</p>
-  </div>
+  </MainLayout>
 </template>
