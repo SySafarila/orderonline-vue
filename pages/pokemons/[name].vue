@@ -44,7 +44,7 @@ const getPokemon = async () => {
         console.error(error)
         Swal.fire({
             icon: "error",
-            title: `Pokemon ${error.response.data}`
+            title: `${error.response.data.message ?? 'Error'}`
         }).then(res => {
             if (res.isConfirmed) {
                 router.push('/');
